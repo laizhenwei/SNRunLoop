@@ -101,7 +101,7 @@
     
     if (self.optimize) {
         // 优化
-        SNRunLoop.main.limit(50).drop.add(^{
+        SNRunLoop.main.limit(50).add(^{
             imageView1.image = [UIImage imageWithContentsOfFile:path];
             [cell.contentView addSubview:imageView1];
         }).add(^{

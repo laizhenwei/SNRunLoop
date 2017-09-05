@@ -10,13 +10,13 @@
 
 @interface SNRunLoop : NSObject
 
-+ (instancetype)main;
-+ (instancetype)current;
++ (SNRunLoop *)main;
++ (SNRunLoop *(^)(NSString *))queue;
 
 - (SNRunLoop *(^)(dispatch_block_t))add;
 - (SNRunLoop *(^)(dispatch_block_t))cancel;
-- (SNRunLoop *(^)(NSUInteger))after;
+- (SNRunLoop *(^)(NSUInteger))skip;
 - (SNRunLoop *(^)(NSUInteger))limit;
-- (SNRunLoop *)drop;
+- (SNRunLoop *)cache;
 
 @end
