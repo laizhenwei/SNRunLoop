@@ -12,54 +12,61 @@
 #define kSCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define kSCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 
-@interface ViewController ()<UITableViewDelegate, UITableViewDataSource>{
-    NSTimeInterval lastTime;
-    NSUInteger count;
-}
+@interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
-
 @property (nonatomic, strong) CADisplayLink *displayLink;
-
+@property (nonatomic, assign) NSTimeInterval lastTime;
+@property (nonatomic, assign) NSUInteger count;
+@property (nonatomic, assign) BOOL optimize;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self showFPS];
-    [self createUI];
-}
-- (void)showFPS {
-    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleDisplayLink:)];
-    
-    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    [self initView];
 }
 
-- (void)handleDisplayLink:(CADisplayLink *)displayLink {
-    if (lastTime == 0) {
-        lastTime = self.displayLink.timestamp;
-        return;
-    }
-    count++;
-    NSTimeInterval timeout = self.displayLink.timestamp - lastTime;
-    if (timeout < 1) return;
-    lastTime = self.displayLink.timestamp;
-    CGFloat fps = count / timeout;
-    count = 0;
-    self.title = [NSString stringWithFormat:@"%.f FPS",fps];
-}
-
-- (void)createUI{
+- (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.view addSubview:_tableView];
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"优化: 关" style:UIBarButtonItemStylePlain target:self action:@selector(rightBarButtonAction)];
+    self.navigationItem.rightBarButtonItem = item;
+    
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleDisplayLink:)];
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 }
 
+#pragma mark - Action
+- (void)handleDisplayLink:(CADisplayLink *)displayLink {
+    if (self.lastTime == 0) {
+        self.lastTime = self.displayLink.timestamp;
+        return;
+    }
+    self.count++;
+    NSTimeInterval timeout = self.displayLink.timestamp - self.lastTime;
+    if (timeout < 1) return;
+    self.lastTime = self.displayLink.timestamp;
+    CGFloat fps = self.count / timeout;
+    self.count = 0;
+    self.title = [NSString stringWithFormat:@"%.f FPS",fps];
+}
+
+- (void)rightBarButtonAction {
+    self.optimize = !self.optimize;
+    NSString *title = [NSString stringWithFormat:@"优化: %@", self.optimize ? @"开" : @"关"];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(rightBarButtonAction)];
+    self.navigationItem.rightBarButtonItem = item;
+}
+
+#pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 500;
+    return 1000;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -92,28 +99,27 @@
 
     NSString *path = [[NSBundle mainBundle] pathForResource:@"pd_1024" ofType:@"png"];
     
-    // 优化
-    SNRunLoop.main.limit(50).drop.add(^{
+    if (self.optimize) {
+        // 优化
+        SNRunLoop.main.limit(50).drop.add(^{
+            imageView1.image = [UIImage imageWithContentsOfFile:path];
+            [cell.contentView addSubview:imageView1];
+        }).add(^{
+            imageView2.image = [UIImage imageWithContentsOfFile:path];
+            [cell.contentView addSubview:imageView2];
+        }).add(^{
+            imageView3.image = [UIImage imageWithContentsOfFile:path];
+            [cell.contentView addSubview:imageView3];
+        });
+    } else {
+        // 卡顿测试
         imageView1.image = [UIImage imageWithContentsOfFile:path];
         [cell.contentView addSubview:imageView1];
-    }).add(^{
         imageView2.image = [UIImage imageWithContentsOfFile:path];
         [cell.contentView addSubview:imageView2];
-    }).add(^{
         imageView3.image = [UIImage imageWithContentsOfFile:path];
         [cell.contentView addSubview:imageView3];
-    });
-    
-    /*
-    // 卡顿测试
-    imageView1.image = [UIImage imageWithContentsOfFile:path];
-    [cell.contentView addSubview:imageView1];
-    imageView2.image = [UIImage imageWithContentsOfFile:path];
-    [cell.contentView addSubview:imageView2];
-    imageView3.image = [UIImage imageWithContentsOfFile:path];
-    [cell.contentView addSubview:imageView3];
-    */
-    
+    }
     return cell;
 }
 
