@@ -31,6 +31,7 @@
 		C653BB451F5E490C008EBDC8 /* SNRunLoop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SNRunLoop.h; sourceTree = "<group>"; };
 		C653BB461F5E490C008EBDC8 /* SNRunLoop.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SNRunLoop.m; sourceTree = "<group>"; };
 		C69187781F5E9411005CA49F /* pd_1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pd_1024.png; sourceTree = "<group>"; };
+		C691877A1F5EA5BA005CA49F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +48,7 @@
 		C653BB221F5E48EB008EBDC8 = {
 			isa = PBXGroup;
 			children = (
+				C691877A1F5EA5BA005CA49F /* README.md */,
 				C653BB2D1F5E48EB008EBDC8 /* SNRunLoop */,
 				C653BB2C1F5E48EB008EBDC8 /* Products */,
 			);
