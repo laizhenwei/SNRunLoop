@@ -170,7 +170,7 @@ static int const kRunLoopTaskSkip = 100;
                 CFRunLoopRemoveObserver(CFRunLoopGetCurrent(), observer, kCFRunLoopCommonModes);
                 [SNRunLoop.manager.runloops removeObjectForKey:self.name];
             };
-            // 延迟销毁，在 300 次循环后
+            // 延迟销毁，在 n 次循环后
             SNRunLoop.main.skip(kRunLoopTaskSkip).limit(1).add(self.destroyTask);
         }
     } else {
