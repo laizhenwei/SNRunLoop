@@ -19,7 +19,7 @@ return self; \
 };
 
 static int const kRunLoopTasksLimit = INT_MAX;
-static int const kRunLoopTaskSkip = 300;
+static int const kRunLoopTaskSkip = 100;
 
 @interface SNRunLoop () {
     dispatch_semaphore_t _lock;

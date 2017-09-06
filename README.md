@@ -10,7 +10,7 @@
 
 针对 UI 层来说，大量的 UI 操作也很容易阻塞主线程，例如：我们参见的列表滑动卡顿。
 
-`SNRunLoop` 是为了解决这个问题而生，他可以让你将一个大任务拆分成很多个小任务，在 `Runloop` 当前循环结束之前(`RunLoopBeforeWaiting`)，依次执行各个小任务。
+`SNRunLoop` 是为了解决这个问题而生，他可以让你将一个大任务拆分成很多个小任务，在 `Runloop` 当前循环空闲时(`kRunLoopBeforeWaiting`)，依次执行各个小任务。
 
 ## 使用
 
@@ -28,7 +28,7 @@
     
 - 自定义
 
-    当任务总数为 0 时，会在 n 个循环后销毁 `observer` (n 为粗糙值 300)
+    当任务总数为 0 时，会在 n 个循环后销毁 `observer` (n 为粗糙值 100)
 
     ```objc
     SNRunLoop.queue(@"com.sina.runloop.queue1")
